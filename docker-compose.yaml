@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    container_name: postgres
+    restart: always
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres_fast_api
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  microservice:
+    container_name: fastapi_users
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8000"
+    environment:
+      - DATABASE_URL=postgresql://root:root@db:5432/postgres_fast_api
+    command: sh -c './wait-for db:5432 && alembic upgrade head && python main.py'
+    depends_on:
+      - db    
+volumes:
+  postgres:
