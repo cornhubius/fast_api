@@ -1,5 +1,3 @@
-# fast_api
-
 HOW TO USE
 
 1. Clone repo `git clone https://github.com/cornhubius/fast_api`
@@ -18,7 +16,7 @@ DOCKER
 2. Available at: `localhost:5000/`
 
 TEST
-1.Run: `pytest`
+1. Run: `pytest`
 
 DOCS API
 1. Available at: `localhost:8000/docs`
