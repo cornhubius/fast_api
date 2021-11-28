@@ -44,26 +44,52 @@ pipenv shell
 ```bash
 pipenv install Pipfile
 ```
-6. Create .env file:
+6. Rename .env.sample to .env:
 ```bash
-touch .env && echo "DATABASE_URL=<your database url>" > .env
+mv .env.sample .env
 ```
-7. Apply to alembic migrations: 
+7. Declare default environment variables in .env file
+8. Apply to alembic migrations: 
 ```bash
 alembic upgrade head
 ```
-8. Run app: 
+9. Run app: 
 ```bash
 python main.py
 ```
-9. Available at: 
+10. Available at: 
 ```bash
 localhost:8000/
 ```
 
 
 ## TEST: <a name="TEST"></a>
-Run: 
+1. Clone repo
+```bash
+git clone https://github.com/cornhubius/fast_api
+```
+2. Open `fast_api` directory
+```bash
+cd fast_api/
+```
+3. We use pipenv. Install it: 
+```bash
+pip install pipenv
+```
+4. If not activated automatically, activate env: 
+```bash
+pipenv shell
+```
+5. Install dependenses: 
+```bash
+pipenv install Pipfile
+```
+6. Rename .env.sample to .env:
+```bash
+mv .env.sample .env
+```
+7. Declare default environment variables in .env file
+8. Run: 
 ```bash 
 pytest
 ```
