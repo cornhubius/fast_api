@@ -1,12 +1,11 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 
 from core.security import JWTBearer, decode_access_token
 from db.base import database
 from models.users import User
 from repositories.users import UserRepository
 
-cred_exception = HTTPException(
-    status_code=status.HTTP_403_FORBIDDEN, detail="Credentials are not valid")
+from exception.http_exception import CredException
 
 
 def get_user_repository() -> UserRepository:
@@ -20,14 +19,14 @@ async def get_current_user(
 
     payload = decode_access_token(token)
     if payload is None:
-        raise cred_exception
+        raise CredException()
 
     email: str = payload.get("sub")
     if email is None:
-        raise cred_exception
+        raise CredException()
 
     user = await users.get_by_email(email=email)
     if user is None:
-        raise cred_exception
+        raise CredException()
 
     return user

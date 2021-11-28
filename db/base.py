@@ -2,8 +2,10 @@ from os import environ
 import databases
 from sqlalchemy import MetaData, create_engine
 from starlette.config import Config
+
 config = Config(".env")
 TESTING = environ.get("TESTING")
+
 if TESTING:
     DATABASE_URL = (config("TEST_DATABASE_URL", cast=str,
                     default="sqlite:///./test_sql_app.sqlite"))

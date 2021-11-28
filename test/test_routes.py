@@ -159,7 +159,7 @@ def test_patch_unauthorized(temp_db):
         response = client.patch("/user/2", json=request_data_patch,
                                 headers={'Content-Type': 'application/json',
                                          'Authorization': 'Bearer {}'.format(token)})
-    assert response.json() == {'detail': 'Not found user'}
+    assert response.json() == {'detail': 'User not found'}
 
 
 def test_put(temp_db):
@@ -200,7 +200,7 @@ def test_put_unauthorized(temp_db):
         response = client.put("/user/2", json=request_data_patch,
                               headers={'Content-Type': 'application/json',
                                        'Authorization': 'Bearer {}'.format(token)})
-    assert response.json() == {'detail': 'Not found user'}
+    assert response.json() == {'detail': 'User not found'}
 
 
 def test_delete_unauthorized(temp_db):
@@ -213,7 +213,7 @@ def test_delete_unauthorized(temp_db):
         token = response_auth.json()['access_token']
         response = client.delete("/user/2", headers={'Content-Type': 'application/json',
                                                      'Authorization': 'Bearer {}'.format(token)})
-    assert response.json() == {'detail': 'Not found user'}
+    assert response.json() == {'detail': 'User not found'}
 
 
 def test_delete(temp_db):

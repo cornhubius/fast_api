@@ -6,7 +6,7 @@ from fastapi import HTTPException, status
 from core.security import hash_password
 from db.users import users
 from models.users import User, UserAuth, UserPatch, UserResponse
-
+from exception.http_exception import UserNotFound, NotUniqueEmail
 from .base import BaseRepository
 
 
@@ -19,8 +19,7 @@ class UserRepository(BaseRepository):
         query = users.select().where(users.c.id == id)
         user = await self.database.fetch_one(query)
         if user is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise UserNotFound()
         return User.parse_obj(user)
 
     async def create(self, user: UserAuth) -> Optional[User]:
@@ -36,8 +35,7 @@ class UserRepository(BaseRepository):
             query = users.insert().values(**values)
             user.id = await self.database.execute(query)
         except Exception:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Email must be unique")
+            raise NotUniqueEmail()
         return user
 
     async def update(self, id: int, user: UserAuth) -> User:

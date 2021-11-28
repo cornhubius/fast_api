@@ -1,7 +1,8 @@
 import datetime
 from typing import Optional
-from fastapi import HTTPException, status
 from pydantic import BaseModel, EmailStr, constr, validator
+
+from exception.http_exception import PassDontMatch
 
 
 class User(BaseModel):
@@ -34,6 +35,5 @@ class UserAuth(BaseModel):
     @validator("confirm_password")
     def matching_passwords(cls, v, values, **kwargs):
         if 'password' in values and v != values["password"]:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="password don't match")
+            raise PassDontMatch()
         return v

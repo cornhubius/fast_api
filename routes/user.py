@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
+from pydantic.utils import in_ipython
 
 from models.users import User, UserAuth, UserPatch, UserResponse
 from repositories.users import UserRepository
-
+from exception.http_exception import UserNotFound
 from .depends import get_current_user, get_user_repository
 
 router = APIRouter()
@@ -21,8 +22,7 @@ async def delete_user_by_id(
 ):
     old_user = await users.get_by_id(id=id)
     if old_user is None or old_user.email != current_user.email:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Not found user")
+        raise UserNotFound()
     return await users.delete(id=id)
 
 
@@ -40,8 +40,7 @@ async def update_user(
 ):
     old_user = await users.get_by_id(id=id)
     if old_user is None or old_user.email != current_user.email:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Not found user")
+        raise UserNotFound()
     return await users.update(id=id, user=user)
 
 
@@ -54,6 +53,5 @@ async def patch_user(
 ):
     old_user = await users.get_by_id(id=id)
     if old_user is None or old_user.email != current_user.email:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Not found user")
+        raise UserNotFound()
     return await users.patch(id=id, user=user)

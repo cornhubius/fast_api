@@ -1,6 +1,6 @@
 import datetime
 
-from fastapi import HTTPException, Request, status
+from fastapi import Request
 from fastapi.security import HTTPBearer
 from fastapi.security.http import HTTPAuthorizationCredentials
 from jose import jwt
@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from starlette.requests import Request
 
 from core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from exception.http_exception import InvalidToken
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -42,12 +43,10 @@ class JWTBearer(HTTPBearer):
 
     async def __call__(self, request: Request):
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
-        exp = HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid auth token")
         if credentials:
             token = decode_access_token(credentials.credentials)
             if token is None:
-                raise exp
+                raise InvalidToken()
             return credentials.credentials
         else:
-            raise exp
+            raise InvalidToken()

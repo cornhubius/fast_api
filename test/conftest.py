@@ -1,14 +1,10 @@
+from db import base
+from sqlalchemy_utils import create_database, drop_database
+from alembic.config import Config
+from alembic import command
 import os
 import pytest
-os.environ['TESTING'] = 'True' #If we placed it below the application import, pytest will use main db
-from alembic import command
-from alembic.config import Config
-from sqlalchemy_utils import create_database, drop_database
-from fastapi.testclient import TestClient
-from main import app
-from db import base
-
-client = TestClient(app)
+os.environ['TESTING'] = 'True'
 
 
 @pytest.fixture(scope="module")

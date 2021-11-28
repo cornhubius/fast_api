@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from fastapi.param_functions import Depends
 
 from core.security import create_access_token, verify_password
+from exception.http_exception import InvalidUsernameOrPassword
 from models.token import Login, Token
 from repositories.users import UserRepository
 
@@ -14,8 +15,7 @@ router = APIRouter()
 async def login(login: Login, users: UserRepository = Depends(get_user_repository)):
     user = await users.get_by_email(login.email)
     if user is None or not verify_password(login.password, user.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="Incorrect username or password")
+        raise InvalidUsernameOrPassword()
     return Token(
         access_token=create_access_token({"sub": user.email}),
         token_type="Bearer"
