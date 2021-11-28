@@ -1,10 +1,12 @@
+import os
+os.environ['TESTING'] = 'True'
 from db import base
 from sqlalchemy_utils import create_database, drop_database
 from alembic.config import Config
 from alembic import command
-import os
+
 import pytest
-os.environ['TESTING'] = 'True'
+
 
 
 @pytest.fixture(scope="module")
